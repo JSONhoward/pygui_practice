@@ -1,13 +1,30 @@
 from dearpygui.core import *
 from dearpygui.simple import *
 
-def save_callback(sender, data):
-    print("Save Clicked")
+def file_picker(sender, data):
+    open_file_dialog(callback=apply_selected_file, extensions=".*,.py")
 
-with window("DearPyGui"):
-    add_text("Hello, world!")
-    add_button("Save", callback=save_callback)
-    add_input_text("string", default_value="Quick brown fox")
-    add_slider_float("float", default_value=0.273, max_value=1)
+
+def apply_selected_file(sender, data):
+    log_debug(data)  # so we can see what is inside of data
+    directory = data[0]
+    file = data[1]
+    set_value("directory", directory)
+    set_value("file", file)
+    set_value("file_path", f"{directory}\\{file}")
+
+show_logger()
+
+with window("Tutorial"):
+    add_button("Directory Selector", callback=file_picker)
+    add_text("Directory Path: ")
+    add_same_line()
+    add_label_text("##filedir", source="directory", color=[255, 0, 0])
+    add_text("File: ")
+    add_same_line()
+    add_label_text("##file", source="file", color=[255, 0, 0])
+    add_text("File Path: ")
+    add_same_line()
+    add_label_text("##filepath", source="file_path", color=[255, 0, 0])
 
 start_dearpygui()
